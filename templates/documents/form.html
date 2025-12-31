@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - NoteIt{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">{{ title }}</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.title.label(class="form-label") }}
+                        {{ form.title(class="form-control form-control-lg") }}
+                        {% if form.title.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.title.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form.folder_id.label(class="form-label") }}
+                            {{ form.folder_id(class="form-select") }}
+                            {% if form.folder_id.errors %}
+                                <div class="text-danger small">
+                                    {% for error in form.folder_id.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check mt-4">
+                                {{ form.is_favorite(class="form-check-input") }}
+                                {{ form.is_favorite.label(class="form-check-label") }}
+                            </div>
+                            <div class="form-check">
+                                {{ form.is_archived(class="form-check-input") }}
+                                {{ form.is_archived.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.content.label(class="form-label") }}
+                        {{ form.content(class="form-control", rows="20") }}
+                        {% if form.content.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.content.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                        <small class="form-text text-muted">
+                            Поддерживается синтаксис Markdown. Используйте <code>#</code> для заголовков, <code>**</code> для жирного текста, <code>*</code> для курсива и т.д.
+                        </small>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% if document %}{{ url_for('documents.view_document', id=document.id) }}{% else %}{{ url_for('documents.list_documents') }}{% endif %}" 
+                           class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Отмена
+                        </a>
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

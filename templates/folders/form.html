@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - NoteIt{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">{{ title }}</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control") }}
+                        {% if form.name.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.name.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control", rows="4") }}
+                        {% if form.description.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.description.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.parent_id.label(class="form-label") }}
+                        {{ form.parent_id(class="form-select") }}
+                        {% if form.parent_id.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.parent_id.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                        <small class="form-text text-muted">
+                            Выберите родительскую папку или оставьте "Корневая папка" для создания на верхнем уровне.
+                        </small>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% if folder %}{{ url_for('folders.view_folder', id=folder.id) }}{% else %}{{ url_for('folders.list_folders') }}{% endif %}" 
+                           class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Отмена
+                        </a>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

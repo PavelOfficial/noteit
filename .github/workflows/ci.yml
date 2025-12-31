@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Шаг 1: Выполнить checkout кода репозитория
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # Шаг 2: Установить конкретную версию Python 3.11
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      # Проверка версии Python (опционально, для отладки)
+      - name: Verify Python version
+        run: |
+          python --version
+          pip --version
+      
+      # Шаг 3: Установить зависимости проекта из файла requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      # Проверка установленных пакетов (опционально)
+      - name: List installed packages
+        run: |
+          pip list
+      
+      # Шаг 4: Запустить тесты командой pytest
+      - name: Run tests with pytest
+        env:
+          # SECRET_KEY требуется для инициализации приложения
+          # Используем секрет из GitHub Secrets или fallback для тестов
+          SECRET_KEY: ${{ secrets.SECRET_KEY || 'test-secret-key-for-ci-workflow-only' }}
+          DATABASE_URL: sqlite:///test_noteit.db
+          FLASK_APP: app.py
+          FLASK_ENV: testing
+        run: |
+          pytest -v --tb=short
+

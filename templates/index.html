@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}NoteIt - Главная{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3">
+                <i class="bi bi-journal-text text-primary"></i> NoteIt
+            </h1>
+            <p class="lead text-muted">
+                Многопользовательское приложение для заметок в формате Markdown
+            </p>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <h2 class="card-title text-center mb-4">Добро пожаловать в NoteIt!</h2>
+                <p class="card-text text-center mb-4">
+                    Создавайте, редактируйте и организуйте свои заметки с поддержкой Markdown.
+                    Организуйте заметки в папки, добавляйте в избранное и быстро находите нужное.
+                </p>
+                
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-person-plus"></i> Зарегистрироваться
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i> Войти
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-markdown text-primary" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Markdown</h5>
+                        <p class="card-text">Полная поддержка синтаксиса Markdown для форматирования текста</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-folder text-primary" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Организация</h5>
+                        <p class="card-text">Создавайте папки и подпапки для удобной организации заметок</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-search text-primary" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Поиск</h5>
+                        <p class="card-text">Быстрый поиск по заголовкам и содержимому заметок</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

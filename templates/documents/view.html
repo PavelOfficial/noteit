@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}{{ document.title }} - NoteIt{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>{{ document.title }}</h1>
+            <div class="btn-group">
+                <a href="{{ url_for('documents.edit_document', id=document.id) }}" class="btn btn-primary">
+                    <i class="bi bi-pencil"></i> Редактировать
+                </a>
+                <form method="POST" action="{{ url_for('documents.delete_document', id=document.id) }}" class="d-inline" onsubmit="return confirm('Удалить документ?');">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Удалить
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="mb-3">
+                    <small class="text-muted">
+                        <i class="bi bi-calendar"></i> Создано: {{ document.created_at.strftime('%d.%m.%Y %H:%M') }} |
+                        <i class="bi bi-clock"></i> Обновлено: {{ document.updated_at.strftime('%d.%m.%Y %H:%M') }}
+                        {% if document.folder %}
+                            | <i class="bi bi-folder"></i> {{ document.folder.name }}
+                        {% endif %}
+                        {% if document.is_favorite %}
+                            | <i class="bi bi-star-fill text-warning"></i> Избранное
+                        {% endif %}
+                        {% if document.is_archived %}
+                            | <i class="bi bi-archive"></i> Архив
+                        {% endif %}
+                    </small>
+                </div>
+                
+                <div class="document-content">
+                    {{ document.content_html|safe }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <a href="{{ url_for('documents.list_documents') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Назад к списку
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.document-content {
+    line-height: 1.6;
+}
+.document-content h1, .document-content h2, .document-content h3 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+.document-content p {
+    margin-bottom: 1em;
+}
+.document-content code {
+    background-color: #f4f4f4;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+.document-content pre {
+    background-color: #f4f4f4;
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+.document-content ul, .document-content ol {
+    margin-bottom: 1em;
+}
+</style>
+{% endblock %}
+

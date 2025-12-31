@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}{{ folder.name }} - NoteIt{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h1>
+            <i class="bi bi-folder-fill text-primary"></i> {{ folder.name }}
+        </h1>
+        <div class="btn-group">
+            <a href="{{ url_for('folders.edit_folder', id=folder.id) }}" class="btn btn-primary">
+                <i class="bi bi-pencil"></i> Редактировать
+            </a>
+            <form method="POST" action="{{ url_for('folders.delete_folder', id=folder.id) }}" class="d-inline" onsubmit="return confirm('Удалить папку? Все документы в ней будут перемещены в корень.');">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Удалить
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if folder.description %}
+<div class="card mb-4">
+    <div class="card-body">
+        <p class="mb-0">{{ folder.description }}</p>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <!-- Documents in Folder -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-journal-text"></i> Документы в папке ({{ documents|length }})</h5>
+                <a href="{{ url_for('documents.create_document', folder_id=folder.id) }}" class="btn btn-sm btn-primary">
+                    <i class="bi bi-plus"></i> Добавить документ
+                </a>
+            </div>
+            <div class="card-body">
+                {% if documents %}
+                    <div class="list-group list-group-flush">
+                        {% for document in documents %}
+                        <a href="{{ url_for('documents.view_document', id=document.id) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ document.title }}</h6>
+                                <small>{{ document.updated_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                            </div>
+                            {% if document.is_favorite %}
+                                <small><i class="bi bi-star-fill text-warning"></i> Избранное</small>
+                            {% endif %}
+                        </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">В этой папке пока нет документов.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Subfolders -->
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-folder"></i> Подпапки ({{ children|length }})</h5>
+            </div>
+            <div class="card-body">
+                {% if children %}
+                    <div class="list-group list-group-flush">
+                        {% for child in children %}
+                        <a href="{{ url_for('folders.view_folder', id=child.id) }}" class="list-group-item list-group-item-action">
+                            <i class="bi bi-folder"></i> {{ child.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center small">Нет подпапок</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a href="{{ url_for('folders.list_folders') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Назад к списку папок
+    </a>
+</div>
+{% endblock %}
+

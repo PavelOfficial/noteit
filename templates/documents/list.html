@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Документы - NoteIt{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-journal-text"></i> Документы</h1>
+        <a href="{{ url_for('documents.create_document') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Новый документ
+        </a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="btn-group" role="group">
+                    <a href="{{ url_for('documents.list_documents') }}" 
+                       class="btn btn-outline-primary {% if not is_favorite and not is_archived %}active{% endif %}">
+                        Все
+                    </a>
+                    <a href="{{ url_for('documents.list_documents', favorite=True) }}" 
+                       class="btn btn-outline-primary {% if is_favorite %}active{% endif %}">
+                        <i class="bi bi-star"></i> Избранное
+                    </a>
+                    <a href="{{ url_for('documents.list_documents', archived=True) }}" 
+                       class="btn btn-outline-primary {% if is_archived %}active{% endif %}">
+                        <i class="bi bi-archive"></i> Архив
+                    </a>
+                </div>
+                
+                {% if folders %}
+                <div class="dropdown d-inline-block ms-3">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        {% if current_folder_id %}
+                            {% for folder in folders %}
+                                {% if folder.id == current_folder_id %}{{ folder.name }}{% endif %}
+                            {% endfor %}
+                        {% else %}
+                            Все папки
+                        {% endif %}
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('documents.list_documents') }}">Все папки</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        {% for folder in folders %}
+                        <li><a class="dropdown-item" href="{{ url_for('documents.list_documents', folder_id=folder.id) }}">{{ folder.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Documents List -->
+<div class="row">
+    <div class="col-12">
+        {% if documents.items %}
+            <div class="row">
+                {% for document in documents.items %}
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ url_for('documents.view_document', id=document.id) }}" class="text-decoration-none">
+                                    {{ document.title }}
+                                </a>
+                                {% if document.is_favorite %}
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                {% endif %}
+                            </h5>
+                            <p class="card-text text-muted small">
+                                {{ document.content[:100] }}{% if document.content|length > 100 %}...{% endif %}
+                            </p>
+                            {% if document.folder %}
+                                <small class="text-muted">
+                                    <i class="bi bi-folder"></i> {{ document.folder.name }}
+                                </small>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">{{ document.updated_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('documents.edit_document', id=document.id) }}" class="btn btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form method="POST" action="{{ url_for('documents.delete_document', id=document.id) }}" class="d-inline" onsubmit="return confirm('Удалить документ?');">
+                                        <button type="submit" class="btn btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if documents.pages > 1 %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if documents.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('documents.list_documents', page=documents.prev_num, folder_id=current_folder_id, favorite=is_favorite, archived=is_archived) }}">Предыдущая</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for page_num in documents.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                        {% if page_num %}
+                            {% if page_num == documents.page %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ page_num }}</span>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('documents.list_documents', page=page_num, folder_id=current_folder_id, favorite=is_favorite, archived=is_archived) }}">{{ page_num }}</a>
+                            </li>
+                            {% endif %}
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">…</span>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if documents.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('documents.list_documents', page=documents.next_num, folder_id=current_folder_id, favorite=is_favorite, archived=is_archived) }}">Следующая</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        {% else %}
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-journal-text text-muted" style="font-size: 4rem;"></i>
+                    <p class="text-muted mt-3">Документов не найдено</p>
+                    <a href="{{ url_for('documents.create_document') }}" class="btn btn-primary">Создать первый документ</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

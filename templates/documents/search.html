@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Поиск - NoteIt{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4"><i class="bi bi-search"></i> Поиск документов</h1>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="input-group input-group-lg">
+                        {{ form.query(class="form-control", placeholder="Введите запрос для поиска...") }}
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                    {% if form.query.errors %}
+                        <div class="text-danger small mt-2">
+                            {% for error in form.query.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        
+        {% if documents %}
+            <h3 class="mb-3">Результаты поиска ({{ documents|length }})</h3>
+            <div class="row">
+                {% for document in documents %}
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ url_for('documents.view_document', id=document.id) }}" class="text-decoration-none">
+                                    {{ document.title }}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted small">
+                                {{ document.content[:150] }}{% if document.content|length > 150 %}...{% endif %}
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <small class="text-muted">{{ document.updated_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% elif request.method == 'POST' %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> По вашему запросу ничего не найдено.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

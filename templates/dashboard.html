@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Панель управления - NoteIt{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="bi bi-speedometer2"></i> Панель управления
+        </h1>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row mb-4">
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-journal-text text-primary" style="font-size: 2.5rem;"></i>
+                <h3 class="mt-2">{{ total_documents }}</h3>
+                <p class="text-muted mb-0">Всего документов</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-folder text-primary" style="font-size: 2.5rem;"></i>
+                <h3 class="mt-2">{{ total_folders }}</h3>
+                <p class="text-muted mb-0">Папок</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-star text-warning" style="font-size: 2.5rem;"></i>
+                <h3 class="mt-2">{{ favorite_documents|length }}</h3>
+                <p class="text-muted mb-0">Избранных</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <a href="{{ url_for('documents.create_document') }}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-plus-circle"></i> Новый документ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Documents -->
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Последние документы</h5>
+                <a href="{{ url_for('documents.list_documents') }}" class="btn btn-sm btn-outline-primary">Все документы</a>
+            </div>
+            <div class="card-body">
+                {% if recent_documents %}
+                    <div class="list-group list-group-flush">
+                        {% for document in recent_documents %}
+                        <a href="{{ url_for('documents.view_document', id=document.id) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ document.title }}</h6>
+                                <small>{{ document.updated_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                            </div>
+                            {% if document.folder %}
+                                <small class="text-muted">
+                                    <i class="bi bi-folder"></i> {{ document.folder.name }}
+                                </small>
+                            {% endif %}
+                        </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">У вас пока нет документов. <a href="{{ url_for('documents.create_document') }}">Создайте первый!</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Favorite Documents & Folders -->
+    <div class="col-lg-4">
+        <!-- Favorite Documents -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-star-fill text-warning"></i> Избранное</h5>
+            </div>
+            <div class="card-body">
+                {% if favorite_documents %}
+                    <div class="list-group list-group-flush">
+                        {% for document in favorite_documents %}
+                        <a href="{{ url_for('documents.view_document', id=document.id) }}" class="list-group-item list-group-item-action">
+                            <small>{{ document.title }}</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center small">Нет избранных документов</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Folders -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-folder"></i> Папки</h5>
+                <a href="{{ url_for('folders.create_folder') }}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-plus"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                {% if folders %}
+                    <div class="list-group list-group-flush">
+                        {% for folder in folders %}
+                        <a href="{{ url_for('folders.view_folder', id=folder.id) }}" class="list-group-item list-group-item-action">
+                            <i class="bi bi-folder"></i> {{ folder.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center small">Нет папок. <a href="{{ url_for('folders.create_folder') }}">Создайте первую!</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

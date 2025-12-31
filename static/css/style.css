@@ -1,0 +1,193 @@
+/* NoteIt Custom Styles */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Navigation */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Documents */
+.document-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.document-content h1 {
+    font-size: 2rem;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5em;
+}
+
+.document-content h2 {
+    font-size: 1.75rem;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 0.3em;
+}
+
+.document-content h3 {
+    font-size: 1.5rem;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.document-content p {
+    margin-bottom: 1em;
+}
+
+.document-content code {
+    background-color: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: #e83e8c;
+}
+
+.document-content pre {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    padding: 1em;
+    overflow-x: auto;
+    margin-bottom: 1em;
+}
+
+.document-content pre code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+}
+
+.document-content ul, .document-content ol {
+    margin-bottom: 1em;
+    padding-left: 2em;
+}
+
+.document-content blockquote {
+    border-left: 4px solid #007bff;
+    padding-left: 1em;
+    margin-left: 0;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.document-content a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.document-content a:hover {
+    text-decoration: underline;
+}
+
+.document-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin: 1em 0;
+}
+
+.document-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+
+.document-content table th,
+.document-content table td {
+    border: 1px solid #dee2e6;
+    padding: 0.5em;
+}
+
+.document-content table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+/* Forms */
+.form-control:focus,
+.form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Buttons */
+.btn {
+    transition: all 0.2s ease;
+}
+
+/* Lists */
+.list-group-item-action:hover {
+    background-color: #f8f9fa;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .document-content {
+        font-size: 1rem;
+    }
+    
+    .document-content h1 {
+        font-size: 1.5rem;
+    }
+    
+    .document-content h2 {
+        font-size: 1.3rem;
+    }
+    
+    .document-content h3 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.3s ease;
+}
+
