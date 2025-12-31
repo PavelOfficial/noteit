@@ -44,6 +44,7 @@ jobs:
       
       # Шаг 4: Запустить тесты командой pytest
       - name: Run tests with pytest
+        working-directory: ${{ github.workspace }}
         env:
           # SECRET_KEY требуется для инициализации приложения
           # Используем секрет из GitHub Secrets или fallback для тестов
@@ -51,6 +52,9 @@ jobs:
           DATABASE_URL: sqlite:///test_noteit.db
           FLASK_APP: app.py
           FLASK_ENV: testing
+          # Добавляем корневую директорию проекта в PYTHONPATH
+          # чтобы Python мог найти модули app, config, models и т.д.
+          PYTHONPATH: ${{ github.workspace }}
         run: |
-          pytest -v --tb=short
+          python -m pytest tests/ -v --tb=short
 
