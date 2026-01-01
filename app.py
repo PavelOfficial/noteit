@@ -35,11 +35,13 @@ def create_app(config_class=Config):
     from blueprints.documents import documents_bp
     from blueprints.folders import folders_bp
     from blueprints.main import main_bp
+    from blueprints.notes import notes_bp
     
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(documents_bp, url_prefix='/documents')
     app.register_blueprint(folders_bp, url_prefix='/folders')
+    app.register_blueprint(notes_bp, url_prefix='/notes')
     
     # Создание таблиц базы данных
     with app.app_context():

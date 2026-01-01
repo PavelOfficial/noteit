@@ -546,5 +546,3 @@ NoteIt-Project/
 ---
 
 **NoteIt** — Простое и эффективное решение для управления документами в формате Markdown.
-
-## Additional test info
